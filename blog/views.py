@@ -10,4 +10,4 @@ class PostList(ListView):
 
 class PostDetail(DetailView):
     model=Post
-    template_name='single_pages/landing.html'
+    template_name='blog/post_detail.html'
