@@ -19,7 +19,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/59833e4ffc.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -77,14 +77,33 @@
         <hr>
 
         <!-- Preview Image -->
-        <img class="img-fluid rounded" src={{p.head_image.url}} alt="">
+        {%if post.head_image%}
+            <img class="img-fluid rounded" src={{post.head_image.url}} alt="{{post}} head image">
+        {%else%}
+            <img class="img-fluid rounded" src='https://picsum.photos/seed/{{post.id}}/800/200' alt="random_image">
 
+
+        {%endif%}
         <hr>
 
         <!-- Post Content -->
         <p>{{post.content}}</p>
         <hr>
 
+        {% if post.file_upload %}
+            <a href="{{post.file_upload.url}}" type="button" class="btn btn-outline-dark" role="button" download>Download:
+                {%if post.get_file_ext == 'csv' %}
+                    <i class="fas fa-file-csv"></i>
+                {%elif post.get_file_ext == 'xlsx' or post.get_file_ext == 'xls'%}
+                    <i class="fas fa-file-excel"></i>
+                {%elif post.get_file_ext == 'docx' or post.get_file_ext == 'doc'%}   
+                    <i class="fas fa-file-word"></i>
+                {%else%}
+                    <i class="fas fa-file"></i>    
+                {%endif%}
+                {{post.get_file_name}}
+            </a>
+        {% endif %}
         <!-- Comments Form -->
         <div class="card my-4">
           <h5 class="card-header">Leave a Comment:</h5>

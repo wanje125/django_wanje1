@@ -1,5 +1,5 @@
 from django.db import models
-
+import os
 # Create your models here.
 class Post(models.Model):
     title=models.CharField(max_length=30, verbose_name='제목')
@@ -14,4 +14,10 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return f'/blog/{self.pk}/' #pk는 primary key로 자동으로 생성
+
+    def get_file_name(self):
+        return os.path.basename(self.file_upload.name)
+    
+    def get_file_ext(self):
+        return self.get_file_name().split('.')[-1]
 
