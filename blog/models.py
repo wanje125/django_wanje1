@@ -10,7 +10,7 @@ class Post(models.Model):
     updated_at=models.DateTimeField(auto_now=True,verbose_name='변경시간')
     head_image = models.ImageField(upload_to='blog/images/%Y/%m/%d/', blank=True)
     file_upload = models.ImageField(upload_to='blog/images/%Y/%m/%d/', blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
 
     def __str__(self):
