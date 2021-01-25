@@ -23,3 +23,24 @@ class PostDetail(DetailView):
         context['categories']=Category.objects.all()
         context['no_category_post_count']=Post.objects.filter(category=None).count()
         return context
+
+
+def category_page(request, slug): #url에서 slug를 받아온다.
+    if slug =='no_category':
+        category='미분류'
+        post_list=Post.objects.filter(category=None)
+    else:
+        category = Category.objects.get(slug=slug)
+        post_list=Post.objects.filter(category=category)
+    
+    return render(
+        request,
+        'blog/blog_list.html',
+        {
+            'post_list':post_list.order_by('-pk'), #pk랑 id 둘다 써도 된다
+            'categories':Category.objects.all(),
+            'no_category_post_count':Post.objects.filter(category=None).count(),
+            'category':category,
+
+        }
+    )

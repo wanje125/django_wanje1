@@ -10,6 +10,10 @@ class Category(models.Model): #post 위에 추가 해야된다
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return f'/blog/category/{self.slug}/' #f string이란 방법인데 format이랑 똑같다.
+    
+
     class Meta:
         verbose_name_plural='Categories'
 
