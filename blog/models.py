@@ -4,13 +4,13 @@ import os
 # Create your models here.
 class Tag(models.Model): #post 위에 추가 해야된다
     name=models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True) #slug는 한글적용이 자동으로 안되서 allow_unicode를 해줘야된다
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return f'/blog/category/{self.slug}/' #f string이란 방법인데 format이랑 똑같다.
+        return f'/blog/tag/{self.slug}/' #f string이란 방법인데 format이랑 똑같다.{}안에 특정 변수를 넣는다.
 
 class Category(models.Model): #post 위에 추가 해야된다
     name=models.CharField(max_length=50, unique=True)

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Post, Category
+from .models import Post, Category, Tag
 # Create your views here.
 
 class PostList(ListView):
@@ -44,3 +44,22 @@ def category_page(request, slug): #url에서 slug를 받아온다.
 
         }
     )
+
+def tag_page(request, slug): #url에서 slug를 받아온다.
+    tag = Tag.objects.get(slug=slug)
+    post_list=tag.post_set.all()
+
+    
+    return render(
+        request,
+        'blog/blog_list.html',
+        {
+            'post_list':post_list.order_by('-pk'), #pk랑 id 둘다 써도 된다
+            'tag':tag,
+            'categories':Category.objects.all(),
+            'no_category_post_count':Post.objects.filter(category=None).count()
+            
+
+        }
+    )
+
