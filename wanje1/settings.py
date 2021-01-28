@@ -38,8 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions', #더 많은 장고의 기능을 제공한다.
+    
     'crispy_forms', # 템플릿의 폼의 모양을 예쁘게 바꿔준다. pip install django-crispy_forms로 설치해야된다.
                     #그리고 아래에 CRISPY_TEMPLATE_PACK = 'bootstrap4'라고 해야된다.
+
+    'markdownx',   #포스트를 작성할때 줄바꿈이나 글자크기를 바꾸거나 내용중간에 그림을 넣을 수 있게 해준다.
+                    #piip install django-markdownx를 해주면 된다. 그리고 url에도 경로를 추가해야 원활하게 작동한다.
     'blog',
     'single_pages',
     

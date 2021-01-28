@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdown #화면에 포스트를 렌더링할때 마크다운 기능이 나타나게 할려면 마크다운 문법으로 
+                                        #작성된 content필드값을 html로 변환하는 작업이 필요하다.
 import os
 # Create your models here.
 class Tag(models.Model): #post 위에 추가 해야된다
@@ -28,7 +31,7 @@ class Category(models.Model): #post 위에 추가 해야된다
 
 class Post(models.Model):
     title=models.CharField(max_length=30, verbose_name='제목')
-    content=models.TextField(verbose_name='내용')
+    content=MarkdownxField()
     hook_text=models.CharField(max_length=100,blank=True, verbose_name='요약문')
     created_at=models.DateTimeField(auto_now_add=True,verbose_name='생성시간')
     updated_at=models.DateTimeField(auto_now=True,verbose_name='변경시간')
@@ -51,5 +54,8 @@ class Post(models.Model):
     def get_file_ext(self):
         return self.get_file_name().split('.')[-1]
 
+    def get_content_markdown(self):
+        return markdown(self.content) #마크다운 문법으로 작성된content 모델을 html로 보이게 전환한다.
+                                        #템플릿에서 get_content_markdown을 입력해서 적용시킨다.
 
 
