@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
+    'django_extensions', #더 많은 장고의 기능을 제공한다.
+    'crispy_forms', # 템플릿의 폼의 모양을 예쁘게 바꿔준다. pip install django-crispy_forms로 설치해야된다.
+                    #그리고 아래에 CRISPY_TEMPLATE_PACK = 'bootstrap4'라고 해야된다.
     'blog',
     'single_pages',
+    
 ]
 
 MIDDLEWARE = [
@@ -124,3 +127,5 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4' #crispy_forms의 스타일을 bootstarp4로 하겠다는 뜻
