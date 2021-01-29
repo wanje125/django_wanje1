@@ -46,6 +46,13 @@ INSTALLED_APPS = [
                     #piip install django-markdownx를 해주면 된다. 그리고 url에도 경로를 추가해야 원활하게 작동한다.
     'blog',
     'single_pages',
+
+
+    'django.contrib.sites', #django.contrib.sites도 넣어야 allauth가 작동한다. 그리고 다하고 migrate도 해준다.
+    'allauth',              #그리고 admin에서 site에 들어가서 도메인을 바꾸고 template을 수정한다.
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google', #이 4가지 라이브러리를 입력해야된다. 그러면 구글 로그인 기능을 사용 할 수 있다. 
     
 ]
 
@@ -133,3 +140,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4' #crispy_forms의 스타일을 bootstarp4로 하겠다는 뜻
+
+AUTHENTICATION_BACKENDS = ( #authentification_beckends설정과 site_id를 추가한다. 그 뒤에 url도 추가한다.
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED=True #회원가입을 할때 이메일을 반드시 받는것으로 설정한다. 
+ACCOUNT_EMAIL_VERIFICATION='none' #이메일 발송세팅이 추가적으로 필요해서 여기서는 다루지 않는다.(필요하면 나중에 공부하자.)
+LOGIN_REDIRECT_URL = '/blog/'  # 로그인하면 블로그 목록 페이지로 리다이렉트 되도록 설정한다.

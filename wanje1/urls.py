@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
     path('markdownx/',include('markdownx.urls')), #마크다운을 사용하기위해 url을 설정해야된다. 그리고 textfield를 markdownxfield로 바꾸면 된다.
+    path('accounts/',include('allauth.urls')),# django-allauth가 사용할 수 있는 url경로를 추가한다. 그리고 migrate만 입력해서 데이터베이스에 반영도 해야된다.
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
