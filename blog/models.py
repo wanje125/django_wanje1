@@ -58,4 +58,18 @@ class Post(models.Model):
         return markdown(self.content) #마크다운 문법으로 작성된content 모델을 html로 보이게 전환한다.
                                         #템플릿에서 get_content_markdown을 입력해서 적용시킨다.
 
+class Comment(models.Model):
+    post=models.ForeignKey(Post, on_delete=models.CASCADE)
+    author=models.ForeignKey(User, on_delete=models.CASCADE)
+    content=models.TextField()
+    created_at=models.DateTimeField(auto_now_add=True)
+    modified_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.author}::{self.content}'
+
+    def get_absolute_url(self):
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
+
+    
 
