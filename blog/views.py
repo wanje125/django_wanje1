@@ -170,3 +170,15 @@ def new_comment(request,pk):
 
 
 
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    model=Comment
+    form_class=CommentForm
+    template_name='blog/comment_form.html'
+
+    def dispatch(self, request, *args, **kwargs): #방문자가 edit버튼을 클릭해 이 페이지로 접근했다면 get 방식이므로 
+                                                    #pk=1인 comment의 내용이 폼에 채워진 상태의 페이지가 나타납니다.
+                                                    #summit 버튼을 클릭하면 /blog/update_comment/1/경로로 post방식을 사용해 폼의 내용을 전달한다
+        if request.user.is_authenticated and request.user == self.get_object().author: #그리고 다른 사용자가 수정하는것을 막는다.
+            return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
