@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
+from .forms import CommentForm
+
 # Create your views here.
 
 class PostList(ListView):
@@ -25,6 +27,7 @@ class PostDetail(DetailView):
         context = super(PostDetail,self).get_context_data()
         context['categories']=Category.objects.all()
         context['no_category_post_count']=Post.objects.filter(category=None).count()
+        context['comment_form']=CommentForm # CommentForm을 comment_form이라는 이름으로 템플릿으로 넘긴다.(폼에서 content 모델만 넘어온다)
         return context
 
 
@@ -143,6 +146,27 @@ class PostUpdate(LoginRequiredMixin, UpdateView):   #로그인믹신을 먼저 �
         
         return response
     
+def new_comment(request,pk):
+    if request.user.is_authenticated: #로그인하지 않은 상태에서도 비정상적인 방법으로 댓글에 접근하려는 시도가 있을 수 있어
+                                        #로그인하지 않은 경우 permission denied를 발생시킨다.
+        post = get_object_or_404(Post, pk=pk) #new_comment 함수는 pk를 인자로 받는다. 이 값으로 댓글을 달 포스트를 쿼리를 날려 가져온다. 
+                                                #해당하는 pk가 없는 경우에는 got_object_or_404로 404오류를 발생시킵니다.
+        
+        if request.method == 'POST': #포스트 방식 폼 버튼 즉 submit 버튼을 눌렀을 경우
+            comment_form = CommentForm(request.POST) #포스트방식으로 들어온 정보를 commentform형식으로 가져옵니다.
+            if comment_form.is_valid(): #폼이 유효하다면 해당 내용으로 새로운 레코드를 만들어 데이터베이스에 저장한다. 
+                comment=comment_form.save(commit=False) #commit=False로 바로 모델에 저장하는것이 아니라 인스턴스만 가지고 온다.
+                comment.post=post # comment_form은 content필드의 내용만 있으므로 post필드는 위에서 pk로 가져온 정보로 채웁니다.
+                comment.author=request.user #author 필드는 로그인한 사용자 정보로 채웁니다.
+                comment.save() #위의 작업들이 끝나면 저장을 합니다.
+                return redirect(comment.get_absolute_url()) #마지막으로 comment의 url로 리다이렉트합니다. 
+                #해당포스트의 상세페이지에서 이 댔글이 작성되어있는 위치로 브라우저가 이동합니다. 어떻게 이쪽으로 이동하는거지?
+
+            else:
+                return redirect(post.get_absolute_url()) #폼이 유효하지 않다면 다시 포스트 페이지로 돌아옵니다.
+
+        else:
+            raise PermissionDenied  #버튼을 클릭한게 아니라 url즉 get으로 들어온경우(~/pk/new_comment/) 요청을 거부합니다.
 
 
 

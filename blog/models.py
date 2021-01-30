@@ -69,7 +69,7 @@ class Comment(models.Model):
         return f'{self.author}::{self.content}'
 
     def get_absolute_url(self):
-        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}' #어드민에서 view on site를 눌리면 해당 댓글을 바로 볼 수 있다. 여기가 잘 이해가 안되긴 하다
 
     
 

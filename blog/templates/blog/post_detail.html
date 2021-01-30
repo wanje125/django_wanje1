@@ -1,4 +1,6 @@
 {%extends 'blog/base.html'%}
+{%load crispy_forms_tags%} 
+<!-- 폼 출력을 꾸며준다. -->
 {%block head_title%}
   {{post.title}} - Blog
 {%endblock%}
@@ -70,12 +72,24 @@
     <div class="card my-4">
       <h5 class="card-header">Leave a Comment:</h5>
       <div class="card-body">
-        <form>
+        {%if user.is_authenticated%}
+        <form id='comment-form' method='POST' action='{{post.get_absolute_url}}new_comment/'> 
+          {% csrf_token %}
+          <!--post.get_absolute_url= '/blog/{self.pk}/'  그래서 이 url과 연결된 new_comment fbv로 간다. 그리고 포스트의 pk를 받는다. -->
           <div class="form-group">
-            <textarea class="form-control" rows="3"></textarea>
+            <div id="div_id_content" class="form-group"> <label for="id_content" class=" requiredField">
+              Content<span class="asteriskField">*</span> </label> <div class=""> <textarea name="content" cols="40" rows="5" class="textarea form-control" required id="id_content">
+</textarea> </div> </div>
+            <div></div> 
+            <!-- 뷰에서 폼을 comment_form으로 넘겨받았다. -->
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        {%else%}
+          <a role='button' class="btn btn-outline-dark btn-sm btn-block" href="#" data-toggle='modal' 
+          data-target='#LoginModal'>Log in and leave a comment</a>
+
+        {%endif%}
       </div>
     </div>
    
