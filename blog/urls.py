@@ -27,5 +27,6 @@ urlpatterns = [
     path('update_post/<int:pk>/',views.PostUpdate.as_view()),
     path('<int:pk>/new_comment/',views.new_comment),
     path('update_comment/<int:pk>/',views.CommentUpdate.as_view()),
-    path('delete_comment/<int:pk>/',views.delete_comment)
+    path('delete_comment/<int:pk>/',views.delete_comment),
+    path('search/<str:q>/',views.PostSearch.as_view()), #검색어에 해당하는 값을 문자열로 받고 그 값을 q라고 부르겠다는 의미이다.
 ]

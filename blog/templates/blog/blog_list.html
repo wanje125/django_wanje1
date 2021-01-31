@@ -8,7 +8,9 @@
             &nbsp;&nbsp;New Post</a>
         {%endif%}
     {%endif%}
-    <h1>Blog{%if category%} <span class="badge bg-secondary">{{category}}</span>{%endif%}
+    <h1>Blog
+    {%if search_info%} <small class='text-muted'>{{search_info}}</small>{%endif%}
+    {%if category%} <span class="badge bg-secondary">{{category}}</span>{%endif%}
         {%if tag%} <span class="badge bg-light"><i class="fas fa-tags"></i>{{tag}} ({{tag.post_set.count}})</span>{%endif%}</h1>
         {%if post_list.exists%}
             {%for p in post_list%}
@@ -47,9 +49,11 @@
             <h3>아직 게시물이 없습니다.</h3>
         {%endif%}
         {% if is_paginated %}
+        {% comment %} is_paginated를 쓴 이유는 만약 포스트 개수가 5개 이하면 필요가 없기 때문이다. {% endcomment %}
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">
-            {%if page_obj.has_previous%}
+            {%if page_obj.has_previous%} 
+            {% comment %} page_obj를 이용해서 다음페이지나 이전페이지가 있는지 알아낸다. {% endcomment %}
                 <li class="page-item">
                 <a class="page-link" href="?page={{page_obj.previous_page_number}}">&larr; Newer</a>
                 </li>

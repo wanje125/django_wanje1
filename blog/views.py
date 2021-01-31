@@ -5,6 +5,7 @@ from .models import Post, Category, Tag, Comment
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from .forms import CommentForm
+from django.db.models import Q #여러 쿼리를 동시에 써야할때는 장고에서 제공하는 Q를 사용한다.
 
 # Create your views here.
 
@@ -195,3 +196,22 @@ def delete_comment(request, pk):
         return redirect(post.get_absolute_url()) #그뒤로 댓글이 달린 post로 redirect한다
     else:
         raise PermissionDenied        
+
+#아래 pg 518 참조
+class PostSearch(PostList): #위에 만들었던 PostList를 상속받는다.
+    paginate_by=10 #더 많이 볼 수 있게 10으로 설정합니다. 혹은 None으로 하면 페이지가 없이 모든 검색결과가 출력됩니다.
+
+    def get_queryset(self): #model이 post이므로 get_queryset의 결과는 Post.objects.all()과 동일
+        q=self.kwargs['q'] #url을 통해 넘어온 q라는 검색어를 받아 q라는 변수에 저장한다. 
+        post_list = Post.objects.filter( #title__contain은 title.contains와 같은 의미이다. 
+            Q(title__contains=q) | Q(tags__name__contains=q) #distinct()는 중복으로 가져온 요소가 있을때 한번만 나타나게 한다
+                                                            #만약 태그와 제목 모두에서 python이 있으면 동일한 포스트를 다 출력한다.
+        ).distinct() #PostSearch는 검색결과만 가지고 와야되므로 get_queryset()을 오버라이딩합니다. 즉 검색결과에 해당되는 포스트만 가지고 옵니다
+        return post_list.order_by('-pk')
+
+    def get_context_data(self,**kwargs): #PostList에 get_context_data()가 존재하지만 몇가지 인자를 추가하기 위해 오버라이딩한다.
+        context=super(PostSearch, self).get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f'Search: {q} ({self.get_queryset().count()})' #템플릿에 쓸 search_info에 검색명과 개수만 넘기면 된다. 
+
+        return context
