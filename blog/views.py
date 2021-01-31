@@ -12,6 +12,10 @@ class PostList(ListView):
     model=Post
     template_name='blog/blog_list.html'
     ordering='-pk'
+    paginate_by=5 #한페이지에 5개의 포스트만 보여준다. page_obj를 템플릿에서 이용하면 된다. pg 507참조
+                #url로 /blog/?page=페이지번호를 입력했을때 어떤 페이지를 보여줄지 urls.py에 두지 않아도 괜찮다. 
+                #장고에서 자동으로 page값에 맞는 포스트를 불러오는 쿼리를 작동시키도록 되어있다.
+
 
     def get_context_data(self, **kwargs):
         context = super(PostList,self).get_context_data()
@@ -188,6 +192,6 @@ def delete_comment(request, pk):
     post = comment.post
     if request.user.is_authenticated and request.user == comment.author:
         comment.delete()
-        return redirect(post.get_absolute_url())
+        return redirect(post.get_absolute_url()) #그뒤로 댓글이 달린 post로 redirect한다
     else:
         raise PermissionDenied        
