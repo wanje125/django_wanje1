@@ -1,0 +1,18 @@
+/* body{
+    background: url('/static/single_pages/images/gon_logo_black.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    height: 50vh;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    background-size: cover;
+    -o-background-size:cover;
+} */
+
+section{
+    margin-bottom:150px;
+}
+
+.card{
+    background-color: rgba(255,255,255,0.6);
+}
