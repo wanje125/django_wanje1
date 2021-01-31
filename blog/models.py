@@ -71,5 +71,8 @@ class Comment(models.Model):
     def get_absolute_url(self):
         return f'{self.post.get_absolute_url()}#comment-{self.pk}' #어드민에서 view on site를 눌리면 해당 댓글을 바로 볼 수 있다. 여기가 잘 이해가 안되긴 하다
 
-    
-
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url() #로그인 계정의 아바타 url을 가져온다.
+        else:
+            return f'https://doitdjango.com/avatar/id/25/818036b33e566bc0/svg/{self.author.email}'
