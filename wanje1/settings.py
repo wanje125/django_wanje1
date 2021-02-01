@@ -20,12 +20,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(n9h+vyqdqi^trto5tz@)yyx7i(o$d1hrowhas1bh(&-57&xpm'
+# SECRET_KEY = '(n9h+vyqdqi^trto5tz@)yyx7i(o$d1hrowhas1bh(&-57&xpm'
+SECRET_KEY = os.environ.get('SECRET_KEY','(n9h+vyqdqi^trto5tz@)yyx7i(o$d1hrowhas1bh(&-57&xpm')
+#시크릿키는 그대로 사용하면 된다. os.environ.get()으로 개발환경 파일에서 값을 읽어올 수 있다.
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG',1))
+# True는 1일 의미한다. 그렇지 않은 경우에는 0이 될 수 있도록 만들면 된다.
+if os.environ.get('DJANGO_ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+else:
+    ALLOWED_HOSTS = []
+#호스트로 허용되는 주소를 적어두는 곳이다. 서비스로 공개할때는 보안을 위해 서버가 될 url만 남겨놓는것이 맞다. 반면에 개발할때는 127.0.0.1이나
+#localhost로 장고에 접근할 수 있어야 된다. 이런 목적으로 env파일에서 DJANGO_ALLOWED_HOST를 읽어올 수 있다면 그 값을 사용하록 없다면 이전과 동일하게
+#사용한다.
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [
+# 
+# ]
 
 
 # Application definition
@@ -92,8 +104,12 @@ WSGI_APPLICATION = 'wanje1.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('SQL_ENGINE','django.db.backends.sqlite3'),
+        'NAME': os.environ.get('SQL_DATABASE',os.path.join(BASE_DIR,'db.sqlite3')),
+        'USER': os.environ.get('SQL_USER','user'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD','password'),
+        'HOST': os.environ.get('SQL_HOST','localhost'),
+        'PORT': os.environ.get('SQL_PORT','5432'),
     }
 }
 
@@ -135,9 +151,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join('BASE_DIR','static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
+#MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4' #crispy_forms의 스타일을 bootstarp4로 하겠다는 뜻
 
