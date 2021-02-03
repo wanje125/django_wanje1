@@ -1,0 +1,34 @@
+version: '3'
+#도커를 최신 버전으로 사용하겠다는 의미. 별다른 이유가 없으면 3으로 설정하면 된다.
+services:
+  web: #web이라는 이름의 서비스 하나만 실행한다.
+    build: . #현재 폴더를 build합니다. 앞에서 Dockerfile이 현재 폴더에 있으므로 이 팔이르을 이용해 컨테이너 이미지를 만든다.
+    command: python manage.py runserver 0.0.0.0:8000 #command로 터미널에서 직접 입력했던 서버실행명령을 대신입력한다.
+    command: gunicorn wanje1.wsgi:application --bind 0.0.0.0:8000 #웹서버 소프트웨어인 Nginx를 사용한다. 이 서버와 장고를 연결하기 위해
+    #필요한 WSGI중 하나인 Gunicorn을 사용하겠다.
+    volumes: #volumes로 로컬 컴퓨터의 폴더와 도커의 폴더를 연결한다. 여기서는 현재 폴더를 /usr/src/app/폴더와 연결한다.
+      - ./:/usr/src/app/
+    ports: #포스트도 이전과 똑같이 8000번 포트를 사용한다.
+      - 8000:8000
+    env_file: 
+      - ./.env.dev
+      # 지금까지는 웹 페이지에 문제가 생기면 나타나는 오류페이지에서 메시지를 읽고 이를 디버깅하면서 웹 사이트를 만들었다.
+      # 오류 페이지가 다른사람에게 보이지 않도록 settings.py 에서 관리되던 요소 일부를 개발환경.env.dev와 배포환경.env.prod에서 나누어 관리하려고 한다.
+      # 지금은 배포할단계는 아니므로 .env.dev만 지정한다.이렇게 env_file을 따로 명시하면 settings.py를 활용할수 있게 setting.py 를 수정만하면된다.
+      # pg 566 567참조
+    depends_on: #web 컨테이너는 db컨테이너가 실행된 이후에 시작해야 된다는 의미이다.
+      - db
+
+  db:
+    image: postgres:12.0-alpine #db라는 이름의 컨테이너는 postgres를 실행하기 위해 만든거다. 이미지는 도커에서 공식으로 제공하는 postgres:12.0-alpine을 사용한다.
+    volumes: #volumes을 설정해서 컨테이너 실행이 중단되더라도 데이터베이스의 내용이 사라지지 않게 한다
+      - postgres_data:/var/lib/postgresql/data/
+    environment: #postgreSQL을 사용하게 위해 사용자명 암호 데이터베이스명을 지정한다. 이때 개발용 데이터베이스임을 표기하기 위해 뒤에 dev를 넣는다.
+      - POSTGRES_USER=do_it_django_db_user
+      - POSTGRESS_PASSWORD=do_it_django_db_password
+      - POSTGRES_DB=do_it_django_dev
+volumes: #volumes을 설정해서 컨테이너 실행이 중단되더라도 데이터베이스의 내용이 사라지지 않게 한다
+  postgres_data:
+
+#데이터 베이스를 sqlite3로 사용할지 다른걸로 사용할지는 settings.py에 정의 되어있다. 그래서 DATABASES default를 바꿔야된다. 
+#pg573참조
