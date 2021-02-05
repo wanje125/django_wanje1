@@ -30,3 +30,4 @@ COPY . /usr/src/app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 #requiredments.txt에 나열된 라이브러리를 설치한다.
+EXPOSE 8000

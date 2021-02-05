@@ -151,10 +151,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join('BASE_DIR','_static') #_static으로 바꾼다. wsgi
+STATIC_ROOT = os.path.join(BASE_DIR,'_static') #_static으로 바꾼다. wsgi
 
 MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
+MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4' #crispy_forms의 스타일을 bootstarp4로 하겠다는 뜻
 
