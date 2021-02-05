@@ -11,16 +11,16 @@ ENV PYTHONUNBUFFERED 1
 #파이썬 로그가 버퍼링없이 즉각적으로 출력하게 한다.
 
 RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev zlib-dev jpeg-dev libc-dev
-RUN apk add --no-cache \
-        libressl-dev \
-        musl-dev \
-        libffi-dev && \
-    pip install --upgrade pip --no-cache-dir cryptography==3.3.1 && \
-    apk del \
-        libressl-dev \
-        musl-dev \
-        libffi-dev
+RUN apk add postgresql-dev gcc python3-dev musl-dev zlib-dev jpeg-dev 
+# RUN apk add --no-cache \
+#         libressl-dev \
+#         musl-dev \
+#         libffi-dev && \
+#     pip install --upgrade pip --no-cache-dir cryptography==3.3.1 && \
+#     apk del \
+#         libressl-dev \
+#         musl-dev \
+#         libffi-dev
 #requirements.txt에서 살펴본 라이브러리를 설치하기 위해 필요한 gcc, musl-dev등을 미리 설치한다. 
 #오류가 나서 2시간동안 미칠뻔햇다.  찾아보고 위에거를 더 추가하니 해결됐다.
 
