@@ -30,7 +30,7 @@ DEBUG = int(os.environ.get('DEBUG',1))
 if os.environ.get('DJANGO_ALLOWED_HOSTS'):
     ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 else:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['52.78.82.169']
 #호스트로 허용되는 주소를 적어두는 곳이다. 서비스로 공개할때는 보안을 위해 서버가 될 url만 남겨놓는것이 맞다. 반면에 개발할때는 127.0.0.1이나
 #localhost로 장고에 접근할 수 있어야 된다. 이런 목적으로 env파일에서 DJANGO_ALLOWED_HOST를 읽어올 수 있다면 그 값을 사용하록 없다면 이전과 동일하게
 #사용한다.
